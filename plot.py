@@ -20,6 +20,7 @@ R_list = np.loadtxt("sigma_R.txt")
 g2_list = np.loadtxt("g2.txt")
 photon_data = np.loadtxt("photon_counting.txt")
 photon_bin_cut_off = 20 
+num_of_simulations = 100000
 
 time_list = z_list[:,0]
 z_list = z_list[:,1]
@@ -29,7 +30,7 @@ g2_list = g2_list[:,1]
 
 ### ----- Analytical results ---------------------------------------------------
 
-Omega = 0.025 # NOTE: the omega here is Omega / gamma 
+Omega = 2.3 # NOTE: the omega here is Omega / gamma 
 
 def sigma_z(t):
 
@@ -146,7 +147,6 @@ plt.legend()
 plt.savefig(directory + "sigma_R.pdf", facecolor=fig1.get_facecolor(), transparent=True, dpi=600)
 
 # Plot g2 
-
 fig4 = plt.figure(4)
 fig4.set_size_inches(18.5, 10.5)
 fig4.set_alpha(0)
@@ -170,7 +170,6 @@ plt.legend()
 plt.savefig(directory + "g2.pdf", facecolor=fig1.get_facecolor(), transparent=True, dpi=600)
 
 # Plot photon counting 
-
 fig5 = plt.figure(5)
 fig5.set_size_inches(18.5, 10.5)
 fig5.set_alpha(0)
@@ -186,6 +185,14 @@ ax5.xaxis.label.set_color(colours.spanish_gray)
 ax5.yaxis.label.set_color(colours.spanish_gray)
 
 x_list = range(np.size(photon_data))
+photon_data_norm = [i / num_of_simulations for i in photon_data]
 
-plt.bar(x_list[0:photon_bin_cut_off], photon_data[0:photon_bin_cut_off])
+# # Poisson distribution lay over 
+# lam = 9.5
+# poisson_list = [(lam**k) * np.exp(-lam) / np.math.factorial(k) for k in x_list]
+
+plt.bar(x_list[0:photon_bin_cut_off], photon_data_norm[0:photon_bin_cut_off])
+plt.xlabel("Photon number")
+plt.ylabel("Probability")
+# plt.plot(x_list[0:photon_bin_cut_off], poisson_list[0:photon_bin_cut_off])
 plt.savefig(directory + "photon_counting.pdf", facecolor=fig1.get_facecolor(), transparent=True, dpi=600)

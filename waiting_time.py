@@ -8,15 +8,15 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import colours
 import matplotlib
-# matplotlib.rcParams.update({'font.size': 24})
+matplotlib.rcParams.update({'font.size': 24})
 
 directory = "results/"
 
 # Import data 
 emission_data = np.loadtxt("emission_tracking.txt")
-num_of_simulations = 20000 
+num_of_simulations = 3000 
 end_time = 20 
-bin_width = (1/5000) / 20
+bin_width = (1/500)
 
 waiting_time_list = np.zeros(int(np.ceil(end_time/bin_width)))
 reduced_time_list = np.linspace(0,end_time,int(np.ceil(end_time/bin_width)))
@@ -51,9 +51,7 @@ for emission in emission_data:
 
             last_time = emission
 
-    print(simulation_counter)
 
-    
 
 ### ----- Plotting ------------------------------
 
@@ -75,5 +73,7 @@ ax1.yaxis.label.set_color(colours.spanish_gray)
 
 waiting_time_norm = [i / num_of_simulations for i in waiting_time_list]
 
-plt.bar(reduced_time_list, waiting_time_norm)
-plt.savefig(directory + "waiting_time.pdf", dpi=600)
+plt.bar(reduced_time_list, waiting_time_norm, width=0.01, color=colours.greek_blue)
+plt.xlabel("Waiting time (seconds)")
+plt.ylabel("Frequency (normalised)")
+plt.savefig(directory + "waiting_time.pdf", facecolor=fig1.get_facecolor(), transparent=True, dpi=600)

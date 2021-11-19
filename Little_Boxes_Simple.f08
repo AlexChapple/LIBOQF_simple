@@ -13,14 +13,14 @@ program main
     real (kind=8), parameter :: start_time = 0.0d0
     complex (kind=8), dimension(2) :: coeffs 
     integer, parameter :: end_time = 20d0 
-    integer (kind=8), parameter :: time_steps = end_time * 5000d0 
+    integer (kind=8), parameter :: time_steps = end_time * 1000d0 
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
-    integer (kind=8), parameter :: num_of_simulations = 3000d0 
-    complex (kind=8), parameter :: Omega = 1.2d0 
+    integer (kind=8), parameter :: num_of_simulations = 100000d0 
+    complex (kind=8), parameter :: Omega = 2.3d0 
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
-    integer :: beginning, end, rate, t, sim, index, index1, index2
+    integer :: beginning, ended_time, rate, t, sim, index, index1, index2
     ! complex (kind=8) :: g_0, e_0, g_1, e_1, g_2, e_2
     complex (kind=8) :: g_0_new, e_0_new, g_1_new, e_1_new !, g_2_new, e_2_new
     real (kind=8), dimension(time_steps) :: rand_list 
@@ -49,7 +49,7 @@ program main
     photon_list = 0d0; emission_tracking_list = 0d0 
 
     ! Initialise time list array 
-    call linspace(start=start_time, end=end_time, time_list=time_list)
+    call linspace(start=start_time, end=end_time, list=time_list)
 
     ! Program execution time tracking 
     call system_clock(beginning, rate)
@@ -107,7 +107,7 @@ program main
                 photon_count = photon_count + 1
 
                 ! Updates emission 
-                emission_tracking_list(sim, emission_index) = emission_tracking_list(sim, emission_index) + 1 
+                emission_tracking_list(sim, emission_index) = time_list(t)
                 emission_index = emission_index + 1  
 
             else
@@ -157,7 +157,7 @@ program main
     open(3, file="sigma_R.txt", status="replace")   
     open(4, file="g2.txt", status="replace")
     open(5, file="photon_counting.txt", status="replace")
-    open(6, file="emission_tracking.txt", status="replace")
+    open(10, file="emission_tracking.txt", status="replace")
 
     do index = 1,size(time_list)
         write(1,*) time_list(index), avg_sigma_z_list(index)
@@ -175,20 +175,20 @@ program main
             if (emission_tracking_list(index1, index2) == 0d0) then 
                 exit 
             else 
-                write(6,*) emission_tracking_list(index1, index2)
+                write(10,*) emission_tracking_list(index1, index2)
             end if 
         end do 
 
-        write(6,*) end_time + 50d0 
+        write(10,*) end_time + 50d0 
 
     end do 
 
     close(1); close(2); close(3)
-    close(4); close(5); close(6)
+    close(4); close(5); close(10)
 
-    call system_clock(end)
+    call system_clock(ended_time)
 
-    print *, "All simulations completed. Execution time: ", real(end - beginning) / real(rate), " seconds."
+    print *, "All simulations completed. Execution time: ", real(ended_time - beginning) / real(rate), " seconds."
 
 
     ! -------------------------------------------------------------------------------------------
@@ -199,11 +199,11 @@ program main
 
     contains 
 
-    subroutine linspace(start, end, time_list) 
+    subroutine linspace(start, end, list) 
 
         real (kind=8), intent(in) :: start
         integer, intent(in) :: end 
-        real (kind=8), intent(out) :: time_list(:)
+        real (kind=8), intent(out) :: list(:)
         real (kind=8) :: range
         integer :: n, i
 
