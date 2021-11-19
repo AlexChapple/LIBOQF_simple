@@ -18,6 +18,8 @@ z_list = np.loadtxt("sigma_z.txt")
 L_list = np.loadtxt("sigma_L.txt")
 R_list = np.loadtxt("sigma_R.txt")
 g2_list = np.loadtxt("g2.txt")
+photon_data = np.loadtxt("photon_counting.txt")
+photon_bin_cut_off = 20 
 
 time_list = z_list[:,0]
 z_list = z_list[:,1]
@@ -166,3 +168,24 @@ plt.ylabel("g2")
 plt.grid()
 plt.legend()
 plt.savefig(directory + "g2.pdf", facecolor=fig1.get_facecolor(), transparent=True, dpi=600)
+
+# Plot photon counting 
+
+fig5 = plt.figure(5)
+fig5.set_size_inches(18.5, 10.5)
+fig5.set_alpha(0)
+fig5.set_facecolor("none")
+ax5 = plt.axes()
+ax5.spines['top'].set_visible(False)
+ax5.spines['right'].set_visible(False)
+ax5.spines['left'].set_color(colours.spanish_gray)
+ax5.spines['bottom'].set_color(colours.spanish_gray)
+ax5.tick_params(axis='x', colors=colours.spanish_gray)
+ax5.tick_params(axis='y', colors=colours.spanish_gray)
+ax5.xaxis.label.set_color(colours.spanish_gray)
+ax5.yaxis.label.set_color(colours.spanish_gray)
+
+x_list = range(np.size(photon_data))
+
+plt.bar(x_list[0:photon_bin_cut_off], photon_data[0:photon_bin_cut_off])
+plt.savefig(directory + "photon_counting.pdf", facecolor=fig1.get_facecolor(), transparent=True, dpi=600)

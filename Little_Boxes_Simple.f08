@@ -17,7 +17,7 @@ program main
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
     integer (kind=8), parameter :: num_of_simulations = 3000d0 
-    complex (kind=8), parameter :: Omega = 0.025d0 
+    complex (kind=8), parameter :: Omega = 1.2d0 
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
     integer :: beginning, end, rate, t, sim, index, index1, index2
@@ -32,7 +32,7 @@ program main
     ! Photon counting distribution 
     integer (kind=8), parameter :: bin_width = 100d0 
     integer (kind=8), dimension(bin_width) :: photon_list 
-    integer (kind = 8) :: photon_count 
+    integer (kind=8) :: photon_count 
 
     ! Emission tracking 
     integer (kind=8) :: emission_index 
@@ -45,7 +45,8 @@ program main
     ! ---------------------------------------------------
 
     ! Initialise arrays 
-    avg_sigma_L_list = 0.0d0; avg_sigma_R_list = 0.0d0; avg_sigma_z_list = 0.0d0; g2 = 0.0d0 
+    avg_sigma_L_list = 0.0d0; avg_sigma_R_list = 0.0d0; avg_sigma_z_list = 0.0d0; g2 = 0.0d0
+    photon_list = 0d0; emission_tracking_list = 0d0 
 
     ! Initialise time list array 
     call linspace(start=start_time, end=end_time, time_list=time_list)
@@ -103,7 +104,7 @@ program main
                 coeffs(1) = 1.0d0
 
                 ! Update photon count 
-                photon_count = photon_count + 1d0  
+                photon_count = photon_count + 1
 
                 ! Updates emission 
                 emission_tracking_list(sim, emission_index) = emission_tracking_list(sim, emission_index) + 1 
@@ -155,7 +156,7 @@ program main
     open(2, file="sigma_L.txt", status="replace")
     open(3, file="sigma_R.txt", status="replace")   
     open(4, file="g2.txt", status="replace")
-    open(5, file="photon_count.txt", status="replace")
+    open(5, file="photon_counting.txt", status="replace")
     open(6, file="emission_tracking.txt", status="replace")
 
     do index = 1,size(time_list)
