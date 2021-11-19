@@ -8,8 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import colours
 import matplotlib
-matplotlib.rcParams.update({'font.size': 24})
-matplotlib.use('Agg')
+# matplotlib.rcParams.update({'font.size': 24})
 
 directory = "results/"
 
