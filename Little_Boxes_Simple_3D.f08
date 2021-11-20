@@ -12,7 +12,7 @@ program main
 
     real (kind=8), parameter :: start_time = 0.0d0
     complex (kind=8), dimension(2) :: coeffs 
-    integer, parameter :: end_time = 100d0 
+    integer, parameter :: end_time = 100d0
     integer (kind=8), parameter :: time_steps = end_time * 500d0 
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
@@ -21,14 +21,14 @@ program main
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
     integer :: beginning, ended_time, rate, t, sim, index
-    ! complex (kind=8) :: g_0, e_0, g_1, e_1, g_2, e_2
-    complex (kind=8) :: g_0_new, e_0_new, g_1_new, e_1_new !, g_2_new, e_2_new
+    complex (kind=8) :: g_0_new, e_0_new, g_1_new, e_1_new 
     real (kind=8), dimension(time_steps) :: rand_list 
 
     ! Photon counting distribution 
     integer (kind=8), parameter :: bin_width = 100d0 
     integer (kind=8), dimension(bin_width) :: photon_list 
     integer (kind=8) :: photon_count 
+    character(len=100) :: directory
 
     ! ---------------------------------------------------
     !           Start running code 
@@ -42,6 +42,7 @@ program main
 
     ! Program execution time tracking 
     call system_clock(beginning, rate)
+
 
     do sim = 1, num_of_simulations
 
@@ -62,8 +63,6 @@ program main
             total = sqrt(modulo_func(e_0_new)**2 + &
                     modulo_func(g_0_new)**2 + modulo_func(e_1_new)**2 &
                     + modulo_func(g_1_new)**2)
-
-            ! I THINK IT SHOULD BE NOT SQUARED...
 
             g_0_new = g_0_new / total 
             e_0_new = e_0_new / total 
@@ -109,7 +108,10 @@ program main
     end do 
 
     !!! Write out final results to a txt file 
-    open(5, file="photon_count_3D_results/photon_counting_100.txt", status="replace")
+
+    write(directory, "(a,i0,a)") "photon_count_3D_results/photon_counting_", end_time, ".txt"
+    
+    open(5, file=directory, status="replace")
 
     do index = 1,bin_width
         write(5,*) photon_list(index)

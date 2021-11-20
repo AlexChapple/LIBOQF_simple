@@ -152,12 +152,12 @@ program main
     g2 = g2 / num_of_simulations
 
     !!! Write out final results to a txt file 
-    open(1, file="sigma_z.txt", status="replace")
-    open(2, file="sigma_L.txt", status="replace")
-    open(3, file="sigma_R.txt", status="replace")   
-    open(4, file="g2.txt", status="replace")
-    open(5, file="photon_counting.txt", status="replace")
-    open(10, file="emission_tracking.txt", status="replace")
+    open(1, file="results/sigma_z.txt", status="replace")
+    open(2, file="results/sigma_L.txt", status="replace")
+    open(3, file="results/sigma_R.txt", status="replace")   
+    open(4, file="results/g2.txt", status="replace")
+    open(5, file="results/photon_counting.txt", status="replace")
+    open(10, file="results/emission_tracking.txt", status="replace")
 
     do index = 1,size(time_list)
         write(1,*) time_list(index), avg_sigma_z_list(index)
