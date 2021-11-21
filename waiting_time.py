@@ -76,4 +76,5 @@ waiting_time_norm = [i / num_of_simulations for i in waiting_time_list]
 plt.bar(reduced_time_list, waiting_time_norm, width=0.01, color=colours.greek_blue)
 plt.xlabel("Waiting time (seconds)")
 plt.ylabel("Frequency (normalised)")
+plt.xlim([0,15])
 plt.savefig(directory + "waiting_time.pdf", facecolor=fig1.get_facecolor(), transparent=True, dpi=600)
