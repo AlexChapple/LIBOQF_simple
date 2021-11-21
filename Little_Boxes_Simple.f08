@@ -17,7 +17,7 @@ program main
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
     integer (kind=8), parameter :: num_of_simulations = 100000d0 
-    complex (kind=8), parameter :: Omega = 2.3d0 
+    complex (kind=8), parameter :: Omega = 1.0d0 
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
     integer :: beginning, ended_time, rate, t, sim, index, index1, index2
@@ -152,12 +152,12 @@ program main
     g2 = g2 / num_of_simulations
 
     !!! Write out final results to a txt file 
-    open(1, file="results/sigma_z.txt", status="replace")
-    open(2, file="results/sigma_L.txt", status="replace")
-    open(3, file="results/sigma_R.txt", status="replace")   
-    open(4, file="results/g2.txt", status="replace")
-    open(5, file="results/photon_counting.txt", status="replace")
-    open(10, file="results/emission_tracking.txt", status="replace")
+    open(1, file="results/sigma_z_10.txt", status="replace")
+    open(2, file="results/sigma_L_10.txt", status="replace")
+    open(3, file="results/sigma_R_10.txt", status="replace")   
+    open(4, file="results/g2_10.txt", status="replace")
+    open(5, file="results/photon_counting_10.txt", status="replace")
+    open(10, file="results/emission_tracking_10.txt", status="replace")
 
     do index = 1,size(time_list)
         write(1,*) time_list(index), avg_sigma_z_list(index)

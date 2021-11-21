@@ -75,4 +75,4 @@ ax.tick_params(axis='z', colors=colours.spanish_gray, pad=10)
 # ax2.tick_params(axis='y', colors=colours.spanish_gray)
 # ax2.tick_params(axis='z', colors=colours.spanish_gray, pad=10)
 
-plt.savefig("results/photon_counting_3D.pdf", facecolor=fig.get_facecolor(), transparent=True, dpi=600)
+plt.savefig("results/photon_counting_3D.pdf", facecolor=fig.get_facecolor(), transparent=True, dpi=600, bbox_inches='tight', pad_inches=0)
