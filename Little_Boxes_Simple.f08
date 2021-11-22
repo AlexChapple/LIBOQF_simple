@@ -16,7 +16,7 @@ program main
     integer (kind=8), parameter :: time_steps = end_time * 1000d0 
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
-    integer (kind=8), parameter :: num_of_simulations = 100000d0 
+    integer (kind=8), parameter :: num_of_simulations = 250000d0 
     complex (kind=8), parameter :: Omega = 1.0d0 
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
@@ -27,7 +27,6 @@ program main
 
     ! sigma z, lowering, raising 
     real (kind=8), dimension(time_steps) :: avg_sigma_z_list, avg_sigma_L_list, avg_sigma_R_list
-    complex (kind=8), dimension(time_steps) :: g2
 
     ! Photon counting distribution 
     integer (kind=8), parameter :: bin_width = 100d0 
@@ -45,7 +44,7 @@ program main
     ! ---------------------------------------------------
 
     ! Initialise arrays 
-    avg_sigma_L_list = 0.0d0; avg_sigma_R_list = 0.0d0; avg_sigma_z_list = 0.0d0; g2 = 0.0d0
+    avg_sigma_L_list = 0.0d0; avg_sigma_R_list = 0.0d0; avg_sigma_z_list = 0.0d0
     photon_list = 0d0; emission_tracking_list = 0d0 
 
     ! Initialise time list array 
@@ -96,8 +95,6 @@ program main
 
                 ! Update the sigma z list 
                 avg_sigma_z_list(t) = avg_sigma_z_list(t) - 1.0d0 
-
-                g2(t) = g2(t) + (g_0_new * e_0_new)
                 
                 ! update coeffs list 
                 coeffs = 0.0d0
@@ -123,8 +120,6 @@ program main
                 avg_sigma_L_list(t) = avg_sigma_L_list(t) + complex_multiply(conjg(g_0_new),e_0_new)
                 avg_sigma_R_list(t) = avg_sigma_R_list(t) + complex_multiply(conjg(e_0_new),g_0_new)
 
-                g2(t) = g2(t) + (g_0_new * e_0_new)
-
                 ! Update coeffs list 
                 coeffs = 0.0d0 
                 coeffs(1) = g_0_new 
@@ -149,13 +144,11 @@ program main
     avg_sigma_z_list = avg_sigma_z_list / num_of_simulations
     avg_sigma_L_list = avg_sigma_L_list / num_of_simulations
     avg_sigma_R_list = avg_sigma_R_list / num_of_simulations
-    g2 = g2 / num_of_simulations
 
     !!! Write out final results to a txt file 
     open(1, file="results/sigma_z_10.txt", status="replace")
     open(2, file="results/sigma_L_10.txt", status="replace")
     open(3, file="results/sigma_R_10.txt", status="replace")   
-    open(4, file="results/g2_10.txt", status="replace")
     open(5, file="results/photon_counting_10.txt", status="replace")
     open(10, file="results/emission_tracking_10.txt", status="replace")
 
@@ -163,11 +156,10 @@ program main
         write(1,*) time_list(index), avg_sigma_z_list(index)
         write(2,*) time_list(index), avg_sigma_L_list(index)
         write(3,*) time_list(index), avg_sigma_R_list(index)
-        write(4,*) time_list(index), modulo_func(g2(index))
     end do 
 
     do index = 1,bin_width
-        write(5,*) photon_list(index)
+        write(4,*) photon_list(index)
     end do 
 
     do index1 = 1, num_of_simulations
@@ -184,7 +176,7 @@ program main
     end do 
 
     close(1); close(2); close(3)
-    close(4); close(5); close(10)
+    close(4); close(10)
 
     call system_clock(ended_time)
 

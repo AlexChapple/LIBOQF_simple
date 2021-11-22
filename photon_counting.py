@@ -37,7 +37,7 @@ x_list = range(np.size(photon_data))
 photon_data_norm = [i / num_of_simulations for i in photon_data]
 
 
-plt.bar(x_list[0:photon_bin_cut_off], photon_data_norm[0:photon_bin_cut_off])
+plt.bar(x_list[0:photon_bin_cut_off], photon_data_norm[0:photon_bin_cut_off], color=colours.greek_blue)
 plt.xlabel("Photon number")
 plt.ylabel("Probability")
 plt.savefig(directory + "photon_counting.pdf", facecolor=fig.get_facecolor(), transparent=True, dpi=600)

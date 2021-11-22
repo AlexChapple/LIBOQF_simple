@@ -16,8 +16,8 @@ program main
     integer (kind=8), parameter :: time_steps = end_time * 1000d0 
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
-    integer (kind=8), parameter :: num_of_simulations = 100000d0 
-    complex (kind=8), parameter :: Omega = 1.0d0 
+    integer (kind=8), parameter :: num_of_simulations = 1000d0 
+    complex (kind=8), parameter :: Omega = 2.3d0 
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
     integer :: beginning, ended_time, rate, t, sim, index, index1, index2
@@ -97,7 +97,7 @@ program main
                 ! Update the sigma z list 
                 avg_sigma_z_list(t) = avg_sigma_z_list(t) - 1.0d0 
 
-                g2(t) = g2(t) + (g_0_new * e_0_new)
+                g2(t) = g2(t) + (e_0_new)
                 
                 ! update coeffs list 
                 coeffs = 0.0d0
@@ -116,14 +116,9 @@ program main
                     modulo_func(g_0_new)**2)
 
                 g_0_new = g_0_new / total 
-                e_0_new = e_0_new / total 
+                e_0_new = e_0_new / total
 
-                ! Update the sigma z, L, R lists 
-                avg_sigma_z_list(t) = avg_sigma_z_list(t) + modulo_func(e_0_new)**2 - modulo_func(g_0_new)**2 
-                avg_sigma_L_list(t) = avg_sigma_L_list(t) + complex_multiply(conjg(g_0_new),e_0_new)
-                avg_sigma_R_list(t) = avg_sigma_R_list(t) + complex_multiply(conjg(e_0_new),g_0_new)
-
-                g2(t) = g2(t) + (g_0_new * e_0_new)
+                g2(t) = g2(t) + (e_0_new)
 
                 ! Update coeffs list 
                 coeffs = 0.0d0 
@@ -152,12 +147,12 @@ program main
     g2 = g2 / num_of_simulations
 
     !!! Write out final results to a txt file 
-    open(1, file="results/sigma_z_10.txt", status="replace")
-    open(2, file="results/sigma_L_10.txt", status="replace")
-    open(3, file="results/sigma_R_10.txt", status="replace")   
-    open(4, file="results/g2_10.txt", status="replace")
-    open(5, file="results/photon_counting_10.txt", status="replace")
-    open(10, file="results/emission_tracking_10.txt", status="replace")
+    open(1, file="results_g2/sigma_z_23.txt", status="replace")
+    open(2, file="results_g2/sigma_L_23.txt", status="replace")
+    open(3, file="results_g2/sigma_R_23.txt", status="replace")   
+    open(4, file="results_g2/g2_23.txt", status="replace")
+    open(5, file="results_g2/photon_counting_23.txt", status="replace")
+    open(10, file="results_g2/emission_tracking_23.txt", status="replace")
 
     do index = 1,size(time_list)
         write(1,*) time_list(index), avg_sigma_z_list(index)
