@@ -9,43 +9,55 @@ program main
     IMPLICIT NONE 
 
     ! Declare general variables and parameters 
-    REAL (KIND=8), PARAMETER :: dt = 0.05 
-    INTEGER (KIND=8), PARAMETER :: segment_count = 200d0 
-    INTEGER (KIND=8), PARAMETER :: iterations = 500000d0 
+    REAL (KIND=8), PARAMETER :: dt = 0.002 
+    INTEGER (KIND=8), PARAMETER :: segment_count = 500d0 
+    INTEGER (KIND=8), PARAMETER :: time_list_size = 5000d0 
+    INTEGER (KIND=8), PARAMETER :: iterations = 20000d0 
     REAL (KIND=8), PARAMETER :: time_interval = 10.0d0 
-    REAL (KIND=8), PARAMETER :: Omega = 1.0d0 
+    REAL (KIND=8), PARAMETER :: Omega = 2.3d0 
     REAL (kind=8), PARAMETER :: pi = 3.14159265358979323846d0
     INTEGER (KIND=8) :: index, t
     REAL (KIND=8) :: total, rand_num
 
-    REAL (KIND=8), DIMENSION(segment_count) :: rand_list, g2_list 
+    REAL (KIND=8), DIMENSION(time_list_size) :: rand_list
+    REAL (KIND=8), DIMENSION(segment_count) :: g2_list 
 
     COMPLEX (KIND=8), DIMENSION(2) :: coeffs
-    COMPLEX (KIND=8) :: g_0_new, e_0_new, g_1_new, e_1_new, e_up, cur_e_up, g2
+    COMPLEX (KIND=8) :: g_0_new, e_0_new, g_1_new, e_1_new, e_up, cur_e, g2
+    COMPLEX (KIND=8) :: cur_g, g_down
+
+    INTEGER (KIND=8) :: emission_count 
 
     ! Initialise 
     g_0_new = 0.0d0; g_1_new = 0.0d0; e_0_new = 0.0d0
     e_1_new = 0.0d0; e_up = 0.0d0; g2_list = 0.0d0
-    rand_list = 0.0d0; g2 = 0.0d0; cur_e_up = 0.0d0 
+    rand_list = 0.0d0; g2 = 0.0d0; cur_e = 0.0d0 
+    
+
+    emission_count = 0d0 
     
     ! -------------------------------------------------
     !       Start running code 
     ! -------------------------------------------------
+
+    coeffs = 0.0d0; coeffs(1) = 1.0d0 
 
     do index = 1, iterations ! Iterates over time intervals 
 
         ! At the start of the time interval we force the system to go back 
         ! to its initial state 
 
-        e_up = SQRT(modulo_func(e_0_new)**2 + & ! Keep track expectation from the last time
-                    modulo_func(e_1_new)**2) 
+        ! e_up = (modulo_func(e_0_new)**2 + & ! Keep track expectation from the last time
+        !             modulo_func(e_1_new)**2) 
+
+        e_up = modulo_func(coeffs(2))**2
 
         coeffs = 0.0d0; coeffs(1) = 1.0d0 
-        g_0_new = 0.0d0; e_0_new = 0.0d0; g_1_new = 0.0d0; e_1_new = 0
+        g_0_new = 0.0d0; e_0_new = 0.0d0; g_1_new = 0.0d0; e_1_new = 0.0d0
 
         call RANDOM_NUMBER(rand_list)
 
-        do t = 1, segment_count
+        do t = 1, time_list_size
 
             g_0_new = coeffs(1) - ((Omega/2)*coeffs(2)*dt)
             e_0_new = (coeffs(2)*(1-dt/2)) + (Omega/2)*coeffs(1)*dt
@@ -65,16 +77,26 @@ program main
 
             if (rand_num <= 2 * modulo_func(g_1_new)**2) then 
 
-                cur_e_up = SQRT(modulo_func(e_0_new)**2 + & 
-                    modulo_func(e_1_new)**2)
-
-                g2 = (e_up * cur_e_up) 
-                g2_list(t) = g2_list(t) + modulo_func(g2)
+                if (mod(t,10) == 0) then 
+                    cur_e = (modulo_func(e_0_new)**2 + & 
+                        modulo_func(e_1_new)**2)
+                    g2 = (e_up * cur_e)
+                    g2_list(t/10) = g2_list(t/10) + (g2)
+                end if 
 
                 coeffs = 0.0d0 
                 coeffs(1) = 1.0d0 
 
+                emission_count = emission_count + 1 
+
             else 
+
+                if (mod(t,10) == 0) then 
+                    cur_e = (modulo_func(e_0_new)**2 + & 
+                        modulo_func(e_1_new)**2)
+                    g2 = (e_up * cur_e)
+                    g2_list(t/10) = g2_list(t/10) + (g2)
+                end if 
 
                 total = SQRT(modulo_func(e_0_new)**2 + &
                     modulo_func(g_0_new)**2)    
@@ -92,6 +114,12 @@ program main
 
         end do 
 
+        g2_list = g2_list / cur_e
+
+        ! cur_e = SQRT(modulo_func(e_0_new)**2 + & 
+        !             modulo_func(e_1_new)**2)
+        ! g2_list(index) = g2_list(index) + (e_up * cur_e)
+
         IF (mod(index, 1000) == 0) THEN 
             PRINT *, index
         END IF 
@@ -99,7 +127,9 @@ program main
 
     end do 
 
-    g2_list = g2_list / (iterations / segment_count)
+    print *, emission_count
+
+    g2_list = g2_list 
 
     open(1, file="results_g2/g2.txt", status="replace")
 

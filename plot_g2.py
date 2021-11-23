@@ -1,10 +1,22 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
-import cmath as cm 
+import cmath as cm
+
+from numpy.lib.function_base import iterable 
 
 g2_data = np.loadtxt("results_g2/g2.txt")
 
-time_list = np.linspace(0,10,200)
+emissions = 88675
+iterations = 20000
+end_time = 10 
+time_list_length = 5000 
+g2_length = 500
+
+divider = iterations
+
+g2_data /= divider
+
+time_list = np.linspace(0,10,500)
 
 def g2(t, Omega):
 
@@ -15,8 +27,9 @@ def g2(t, Omega):
 
     return 1 - a
 
-g2_analytical = [g2(t, 1.0) for t in time_list]
+g2_analytical = [g2(t, 2.3) for t in time_list]
 
-plt.plot(time_list, g2_data)
-plt.plot(time_list, g2_analytical)
+plt.plot(time_list, g2_data, label="numerical")
+plt.plot(time_list, g2_analytical, label="analytical")
+plt.legend()
 plt.show()
