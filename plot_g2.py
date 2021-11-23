@@ -12,11 +12,14 @@ end_time = 10
 time_list_length = 5000 
 g2_length = 500
 
-divider = iterations
+
+
+# divider = 0.2075
+divider = 1/5
 
 g2_data /= divider
 
-time_list = np.linspace(0,10,500)
+time_list = np.linspace(0,10,5000)
 
 def g2(t, Omega):
 
