@@ -9,10 +9,10 @@ program main
     IMPLICIT NONE 
 
     ! Declare general variables and parameters 
-    REAL (KIND=8), PARAMETER :: dt = 0.002 
-    INTEGER (KIND=8), PARAMETER :: segment_count = 5000d0 
-    INTEGER (KIND=8), PARAMETER :: time_list_size = 5000d0 
-    INTEGER (KIND=8), PARAMETER :: iterations = 5000d0 
+    REAL (KIND=8), PARAMETER :: dt = 0.0005 
+    INTEGER (KIND=8), PARAMETER :: segment_count = 20000d0 
+    INTEGER (KIND=8), PARAMETER :: time_list_size = 20000d0 
+    INTEGER (KIND=8), PARAMETER :: iterations = 20000d0 
     REAL (KIND=8), PARAMETER :: time_interval = 10.0d0 
     REAL (KIND=8), PARAMETER :: Omega = 2.3d0 
     REAL (kind=8), PARAMETER :: pi = 3.14159265358979323846d0
@@ -44,10 +44,10 @@ program main
 
     do index = 1, iterations ! Iterates over time intervals 
 
+        e_up = (modulo_func(coeffs(2))**2)
+
         ! At the start of the time interval we force the system to go back 
         ! to its initial state 
-
-        e_up = (modulo_func(coeffs(2))**2)
 
         coeffs = 0.0d0; coeffs(1) = 1.0d0 
         g_0_new = 0.0d0; e_0_new = 0.0d0; g_1_new = 0.0d0; e_1_new = 0.0d0
@@ -78,7 +78,7 @@ program main
                 ! cur_e = (modulo_func(e_0_new)**2)
 
                 g2 = (e_up * cur_e)
-                g2_list(t) = g2_list(t) + (g2)
+                g2_list(t) = g2_list(t) + modulo_func(g2)
 
                 coeffs = 0.0d0 
                 coeffs(1) = 1.0d0 
@@ -91,7 +91,7 @@ program main
                 ! cur_e = (modulo_func(e_0_new)**2)
 
                 g2 = (e_up * cur_e)
-                g2_list(t) = g2_list(t) + (g2)
+                g2_list(t) = g2_list(t) + modulo_func(g2)
 
                 total = SQRT(modulo_func(e_0_new)**2 + &
                     modulo_func(g_0_new)**2)    

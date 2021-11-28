@@ -6,20 +6,16 @@ from numpy.lib.function_base import iterable
 
 g2_data = np.loadtxt("results_g2/g2.txt")
 
-emissions = 88675
+emissions = 88884
 iterations = 20000
 end_time = 10 
-time_list_length = 5000 
-g2_length = 500
+time_list_length = 20000 
 
-
-
-# divider = 0.2075
-divider = 1/5
+divider = iterations / emissions
 
 g2_data /= divider
 
-time_list = np.linspace(0,10,5000)
+time_list = np.linspace(0,10,time_list_length)
 
 def g2(t, Omega):
 
