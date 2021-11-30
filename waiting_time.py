@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import colours
 import matplotlib
+import cmath as cm 
 matplotlib.rcParams.update({'font.size': 24})
 
 directory = "results/"
@@ -73,7 +74,23 @@ ax1.yaxis.label.set_color(colours.spanish_gray)
 
 waiting_time_norm = [i / num_of_simulations for i in waiting_time_list]
 
+# Analytical result here 
+
+Omega = 2.3
+def waiting_analytical(t):
+
+    Y = np.sqrt(2) * Omega
+    delta_prime  = (1/2) * cm.sqrt(1 - 2*Y**2)
+
+    a = np.exp(-t/2) * (Y**2 / (2*Y**2 - 1)) * (1 - np.cosh(delta_prime * t))
+
+    return a 
+
+analytical_list = [waiting_analytical(t) for t in reduced_time_list]
+
 plt.bar(reduced_time_list, waiting_time_norm, width=0.0025, color=colours.greek_blue)
+plt.plot(reduced_time_list, analytical_list, c="red")
+
 plt.xlabel("Waiting time (seconds)")
 plt.ylabel("Frequency (normalised)")
 plt.xlim([0,15])
