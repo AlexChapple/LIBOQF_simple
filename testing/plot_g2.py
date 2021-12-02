@@ -26,11 +26,9 @@ def g2(t, Omega):
 
 g2_analytical = [g2(t, 2.3) for t in time_list]
 
-g2_list /= num_of_simulations 
-
 print(max(g2_list)/ max(g2_analytical))
 
-
+g2_list /= num_of_simulations 
 
 plt.figure(1)
 plt.plot(time_list, g2_list)
