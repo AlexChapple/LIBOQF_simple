@@ -12,7 +12,7 @@ program main
 
     real (kind=8), parameter :: start_time = 0.0d0
     complex (kind=8), dimension(2) :: coeffs 
-    integer, parameter :: end_time = 30d0 
+    integer, parameter :: end_time = 60d0 
     integer (kind=8), parameter :: time_steps = end_time * 1000d0 
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
