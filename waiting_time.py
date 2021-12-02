@@ -15,9 +15,9 @@ directory = "results/"
 
 # Import data 
 emission_data = np.loadtxt("emission_tracking.txt")
-num_of_simulations = 3000 
+num_of_simulations = 500000 
 end_time = 20 
-bin_width = (1/500)
+bin_width = (1/10)
 
 waiting_time_list = np.zeros(int(np.ceil(end_time/bin_width)))
 reduced_time_list = np.linspace(0,end_time,int(np.ceil(end_time/bin_width)))
@@ -72,7 +72,7 @@ ax1.tick_params(axis='y', colors=colours.spanish_gray)
 ax1.xaxis.label.set_color(colours.spanish_gray)
 ax1.yaxis.label.set_color(colours.spanish_gray)
 
-waiting_time_norm = [i / num_of_simulations for i in waiting_time_list]
+waiting_time_norm = [i / (num_of_simulations/10) for i in waiting_time_list]
 
 # Analytical result here 
 

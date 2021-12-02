@@ -12,12 +12,12 @@ program main
 
     real (kind=8), parameter :: start_time = 0.0d0
     complex (kind=8), dimension(2) :: coeffs 
-    integer, parameter :: end_time = 20d0 
+    integer, parameter :: end_time = 60d0 
     integer (kind=8), parameter :: time_steps = end_time * 1000d0 
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
-    integer (kind=8), parameter :: num_of_simulations = 250000d0 
-    complex (kind=8), parameter :: Omega = 1.0d0 
+    integer (kind=8), parameter :: num_of_simulations = 50000d0 
+    complex (kind=8), parameter :: Omega = 2.3d0 
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
     integer :: beginning, ended_time, rate, t, sim, index, index1, index2
@@ -79,8 +79,8 @@ program main
             ! end if 
 
             total = sqrt(modulo_func(e_0_new)**2 + &
-                    modulo_func(g_0_new)**2 + modulo_func(e_1_new)**2 &
-                    + modulo_func(g_1_new)**2)
+                    modulo_func(g_0_new)**2 + 2*modulo_func(e_1_new)**2 &
+                    + 2*modulo_func(g_1_new)**2)
 
             ! I THINK IT SHOULD BE NOT SQUARED...
 
@@ -118,7 +118,7 @@ program main
                 ! Update the sigma z, L, R lists 
                 avg_sigma_z_list(t) = avg_sigma_z_list(t) + modulo_func(e_0_new)**2 - modulo_func(g_0_new)**2 
                 avg_sigma_L_list(t) = avg_sigma_L_list(t) + complex_multiply(conjg(g_0_new),e_0_new)
-                avg_sigma_R_list(t) = avg_sigma_R_list(t) + complex_multiply(conjg(e_0_new),g_0_new)
+                avg_sigma_R_list(t) = avg_sigma_R_list(t) - complex_multiply(conjg(e_0_new),g_0_new)
 
                 ! Update coeffs list 
                 coeffs = 0.0d0 
@@ -146,11 +146,11 @@ program main
     avg_sigma_R_list = avg_sigma_R_list / num_of_simulations
 
     !!! Write out final results to a txt file 
-    open(1, file="results/sigma_z_10.txt", status="replace")
-    open(2, file="results/sigma_L_10.txt", status="replace")
-    open(3, file="results/sigma_R_10.txt", status="replace")   
-    open(5, file="results/photon_counting_10.txt", status="replace")
-    open(10, file="results/emission_tracking_10.txt", status="replace")
+    open(1, file="results2/sigma_z_23.txt", status="replace")
+    open(2, file="results2/sigma_L_23.txt", status="replace")
+    open(3, file="results2/sigma_R_23.txt", status="replace")   
+    open(5, file="results2/photon_counting_23.txt", status="replace")
+    open(10, file="results2/emission_tracking_23.txt", status="replace")
 
     do index = 1,size(time_list)
         write(1,*) time_list(index), avg_sigma_z_list(index)
