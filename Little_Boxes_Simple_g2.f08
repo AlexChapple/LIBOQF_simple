@@ -17,7 +17,7 @@ program main
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
     integer (kind=8), parameter :: num_of_simulations = 100000d0 
-    complex (kind=8), parameter :: Omega = 1.0d0 
+    complex (kind=8), parameter :: Omega = 0.7d0 
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
     integer :: beginning, ended_time, rate, t, sim, index, index1, index2
@@ -109,8 +109,8 @@ program main
     avg_e = avg_e / num_of_simulations
 
     !!! Write out final results to a txt file 
-    open(1, file="results2/g2_10.txt", status="replace")
-    open(2, file="results2/avg_e_10.txt", status="replace")
+    open(1, file="results2/g2_07.txt", status="replace")
+    open(2, file="results2/avg_e_07.txt", status="replace")
 
     do index = 1,size(time_list)
         write(1,*) time_list(index), g2(index)

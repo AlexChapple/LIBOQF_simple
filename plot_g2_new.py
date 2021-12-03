@@ -9,7 +9,7 @@ import colours
 import matplotlib
 matplotlib.rcParams.update({'font.size': 24})
 
-Omega_list = [2.3, 1.0, 0.7]
+Omega_list = [0.7, 1.0, 2.3]
 
 time_list = np.loadtxt("results2/g2_23.txt")[:,0]
 
@@ -20,9 +20,10 @@ for Omega in Omega_list:
     g2_temp = np.loadtxt(name)[:,1]
 
     name2 = "results2/avg_e_" + str(Omega).replace(".", "") + ".txt"
-    norm_temp = np.loadtxt(name2)[:,1]
+    norm_temp = np.loadtxt(name2)
 
-    norm = sum(norm_temp) / np.size(norm_temp)
+    # norm = sum(norm_temp) / np.size(norm_temp)
+    norm = norm_temp[-1]
 
     g2_temp /= (norm**2)
 
@@ -62,17 +63,20 @@ ax1.tick_params(axis='x', colors=colours.spanish_gray)
 ax1.tick_params(axis='y', colors=colours.spanish_gray)
 ax1.xaxis.label.set_color(colours.spanish_gray)
 ax1.yaxis.label.set_color(colours.spanish_gray)
+plt.xlim([0,13])
+plt.xlabel("Time (seconds)")
+plt.ylabel("$g^{(2)}(t)$")
 
 colour_list = [colours.greek_dark_red, colours.orange_peel, colours.new_green]
 
 
 for Omega_index in range(len(Omega_list)):
 
-    plt.plot(time_list, g2_data[Omega_index], label="$\Omega$ = " + str(Omega_list[Omega_index]).replace(".", ""), lw=5, c=colour_list[Omega_index])
+    plt.plot(time_list, g2_data[Omega_index], label="$\Omega$ = " + str(Omega_list[Omega_index]).replace(".", ""), lw=4, c=colour_list[Omega_index])
 
     if Omega_index == 0:
-        plt.plot(time_list, analytical_data[Omega_index], lw=5, label="Analytical", c=colours.greek_dark_blue)     
+        plt.plot(time_list, analytical_data[Omega_index], lw=4, label="Analytical", c=colours.greek_dark_blue, ls="dotted")     
     else:
-        plt.plot(time_list, analytical_data[Omega_index], lw=5, c=colours.greek_dark_blue)     
+        plt.plot(time_list, analytical_data[Omega_index], lw=4, c=colours.greek_dark_blue, ls="dotted")     
     
-plt.show()
+plt.savefig("results2/g2.pdf", dpi=600)
