@@ -67,4 +67,6 @@ plt.figure(3)
 plt.plot(time_list, R_list)
 plt.plot(time_list, R_list_analytical, ls="dashed")
 
+print(sum(z_list)/np.size(z_list))
+
 plt.show()

@@ -12,35 +12,28 @@ program main
 
     real (kind=8), parameter :: start_time = 0.0d0
     complex (kind=8), dimension(2) :: coeffs 
-    integer, parameter :: end_time = 60d0 
-    integer (kind=8), parameter :: time_steps = end_time * 1000d0 
+    integer, parameter :: end_time = 500d0
+    integer (kind=8), parameter :: time_steps = end_time * 500d0 
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
-    integer (kind=8), parameter :: num_of_simulations = 50000d0 
-    complex (kind=8), parameter :: Omega = 2.3d0 
+    integer (kind=8), parameter :: num_of_simulations = 100000d0 
+    complex (kind=8), parameter :: Omega = 1.0d0 
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
     integer :: beginning, ended_time, rate, t, sim, index, index1, index2
     ! complex (kind=8) :: g_0, e_0, g_1, e_1, g_2, e_2
     complex (kind=8) :: g_0_new, e_0_new, g_1_new, e_1_new !, g_2_new, e_2_new
     real (kind=8), dimension(time_steps) :: rand_list 
-    complex (kind=8) :: p_up_0, p_up_now
+    complex (kind=8) :: p_up_0, p_up_now, p_down_0, p_down_now 
 
     ! g2 stuff here 
-    real (kind=8), dimension(time_steps) :: g2 
-
-    ! Experimental 
-    integer :: emission_this_sim, emission_tracker
-
-
-    emission_tracker = 0 
-    emission_this_sim = 0 
+    real (kind=8), dimension(time_steps) :: g2, avg_e
 
     ! ---------------------------------------------------
     !           Start running code 
     ! ---------------------------------------------------
 
-    g2 = 0.0d0 
+    g2 = 0.0d0; avg_e = 0.0d0 
 
     ! Initialise time list array 
     call linspace(start=start_time, end=end_time, list=time_list)
@@ -50,9 +43,7 @@ program main
 
     do sim = 1, num_of_simulations
 
-        emission_this_sim = 0 
-
-        p_up_0 = modulo_func(coeffs(2))**2 ! May need to change to g_1_new or something  
+        p_up_0 = modulo_func(coeffs(2))**2 
 
         ! INITIALISE ARRAYS HERE AND CLEAR ARRAYS HERE 
         coeffs = 0.0d0; coeffs(1) = 1.0d0 
@@ -84,8 +75,6 @@ program main
                 coeffs = 0.0d0
                 coeffs(1) = 1.0d0
 
-                emission_tracker = emission_tracker + 1
-
             else
 
                 total = sqrt(modulo_func(e_0_new)**2 + &
@@ -104,7 +93,9 @@ program main
             ! Update g2 here
             p_up_now = modulo_func(coeffs(2))**2
 
-            g2(t) = g2(t) + (p_up_now * p_up_0)
+            g2(t) = g2(t) + ((p_up_now * p_up_0))
+
+            avg_e(t) = avg_e(t) + (p_up_now)
 
         end do 
 
@@ -114,16 +105,19 @@ program main
 
     end do 
 
-    print *, emission_tracker
+    g2 = g2 / num_of_simulations
+    avg_e = avg_e / num_of_simulations
 
     !!! Write out final results to a txt file 
-    open(1, file="results2/g2_23.txt", status="replace")
+    open(1, file="results2/g2_10.txt", status="replace")
+    open(2, file="results2/avg_e_10.txt", status="replace")
 
     do index = 1,size(time_list)
         write(1,*) time_list(index), g2(index)
+        write(2,*) avg_e(index)
     end do 
 
-    close(1) 
+    close(1); close(2)
 
     call system_clock(ended_time)
 
