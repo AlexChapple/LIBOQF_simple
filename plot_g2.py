@@ -1,5 +1,5 @@
 """
-Plot the g2 plot
+Plot the g2 plot 
 """
 
 import numpy as np 
@@ -9,42 +9,27 @@ import colours
 import matplotlib
 matplotlib.rcParams.update({'font.size': 24})
 
-data = np.loadtxt("results2/g2_23.txt")
-data2 = np.loadtxt("results2/denom.txt")
-data3 = np.loadtxt("results2/z_norm.txt")
-data4 = np.loadtxt("results2/avg_e.txt")
+Omega_list = [2.3, 1.0, 0.7]
 
-time_list = data[:,0]
-G2_list = data[:,1] 
-divider = data2[:,1]
-z_list = data3[:,1]
-avg_e = data4
+time_list = np.loadtxt("results2/g2_test.txt")[:,0]
 
+g2_data = []
+for Omega in Omega_list:
+    
+    name = "results2/g2_" + str(Omega).replace(".", "") + ".txt"
+    g2_temp = np.loadtxt(name)[:,1]
 
-"""
-ratio notes:
+    name2 = "results2/avg_e_" + str(Omega).replace(".", "") + ".txt"
+    norm_temp = np.loadtxt(name2)
 
-end_time: doesn't matter 
-simulation: increasing simulation by 2x increases ration by 2x (simulation count has to matter)
-            This does also 2x the number of total emissions 
-timesteps: doesn't matter 
+    # norm = sum(norm_temp) / np.size(norm_temp)
+    norm = norm_temp[-1]
 
-intensity seems to also matter 
-2.3: ratio 5223, emission 339022
-1.0: ratio 2773, emission 242045
-0.7: ratio 1527, emission 176087
+    g2_temp /= (norm**2)
 
-"""
+    g2_data.append(g2_temp)
 
-end_time = 30
-num_of_simulations = 10000 
-emission = 136029
-norm = sum(avg_e) / np.size(avg_e)
-print(norm)
-
-z_list = [(0.5*(1 + z_list[i]))**2 for i in range(len(z_list))]
-# norm = sum(z_list) / np.size(z_list)
-
+# Set up analytical results 
 def g2(t, Omega):
 
     Y = np.sqrt(2) * Omega
@@ -54,7 +39,16 @@ def g2(t, Omega):
 
     return 1 - a
 
-g2_analytical = [g2(t, 2.3) for t in time_list]
+analytical_data = []
+for Omega in Omega_list:
+
+    g2_analytical_temp = [g2(t, Omega) for t in time_list]
+
+    analytical_data.append(g2_analytical_temp)
+
+
+
+# Plot numerical results 
 
 fig1 = plt.figure(1)
 fig1.set_size_inches(18.5, 10.5)
@@ -69,15 +63,25 @@ ax1.tick_params(axis='x', colors=colours.spanish_gray)
 ax1.tick_params(axis='y', colors=colours.spanish_gray)
 ax1.xaxis.label.set_color(colours.spanish_gray)
 ax1.yaxis.label.set_color(colours.spanish_gray)
+plt.xlim([0,10])
+plt.xlabel("$\gamma \\tau$")
+plt.ylabel("$g^{(2)}(\\tau)$")
 
-G2_list = [G2_list[i] / norm**2 for i in range(len(G2_list))]
-print(max(G2_list)/max(g2_analytical))
+colour_list = [colours.greek_dark_red, colours.orange_peel, colours.new_green]
 
-plt.plot(time_list, G2_list, label="numerical", lw=5, c=colours.orange_peel)
-plt.plot(time_list, g2_analytical, ls="dotted", label="analytical", lw=5, c=colours.greek_dark_blue)
-plt.xlabel("Time (seconds)")
-plt.ylabel("$g^{(2)}(t)$")
-plt.xlim([0,12])
-plt.legend()
+
+for Omega_index in range(len(Omega_list)):
+
+    plt.plot(time_list, g2_data[Omega_index], label="$\Omega / \gamma$ = " + str(Omega_list[Omega_index]), lw=4, c=colour_list[Omega_index])
+
+    if Omega_index == 2:
+        plt.plot(time_list, analytical_data[Omega_index], lw=4, label="Analytical", c=colours.greek_dark_blue, ls="dotted")     
+    else:
+        plt.plot(time_list, analytical_data[Omega_index], lw=4, c=colours.greek_dark_blue, ls="dotted")     
+
 plt.grid()
-plt.savefig("results2/g2.pdf", dpi=600)
+plt.legend(loc="lower right")
+# plt.savefig("results2/g2.pdf", dpi=600)
+plt.show()
+
+

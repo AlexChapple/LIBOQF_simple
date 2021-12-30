@@ -12,11 +12,11 @@ program main
 
     real (kind=8), parameter :: start_time = 0.0d0
     complex (kind=8), dimension(2) :: coeffs 
-    integer, parameter :: end_time = 60d0 
-    integer (kind=8), parameter :: time_steps = end_time * 1000d0 
+    integer, parameter :: end_time = 100d0 
+    integer (kind=8), parameter :: time_steps = end_time * 500d0 
     real (kind=8), parameter :: dt = real(end_time) / real(time_steps)
     real (kind=8), dimension(time_steps) :: time_list 
-    integer (kind=8), parameter :: num_of_simulations = 50000d0 
+    integer (kind=8), parameter :: num_of_simulations = 100000d0 
     complex (kind=8), parameter :: Omega = 2.3d0 
     real (kind=8), parameter :: pi = 3.14159265358979323846d0 
     real (kind=8) :: total, rand_num 
@@ -146,21 +146,21 @@ program main
     avg_sigma_R_list = avg_sigma_R_list / num_of_simulations
 
     !!! Write out final results to a txt file 
-    open(1, file="results2/sigma_z_23.txt", status="replace")
-    open(2, file="results2/sigma_L_23.txt", status="replace")
-    open(3, file="results2/sigma_R_23.txt", status="replace")   
-    open(5, file="results2/photon_counting_23.txt", status="replace")
+    ! open(1, file="results2/sigma_z_23.txt", status="replace")
+    ! open(2, file="results2/sigma_L_23.txt", status="replace")
+    ! open(3, file="results2/sigma_R_23.txt", status="replace")   
+    ! open(4, file="results2/photon_counting_23.txt", status="replace")
     open(10, file="results2/emission_tracking_23.txt", status="replace")
 
-    do index = 1,size(time_list)
-        write(1,*) time_list(index), avg_sigma_z_list(index)
-        write(2,*) time_list(index), avg_sigma_L_list(index)
-        write(3,*) time_list(index), avg_sigma_R_list(index)
-    end do 
+    ! do index = 1,size(time_list)
+    !     write(1,*) time_list(index), avg_sigma_z_list(index)
+    !     write(2,*) time_list(index), avg_sigma_L_list(index)
+    !     write(3,*) time_list(index), avg_sigma_R_list(index)
+    ! end do 
 
-    do index = 1,bin_width
-        write(4,*) photon_list(index)
-    end do 
+    ! do index = 1,bin_width
+    !     write(4,*) photon_list(index)
+    ! end do 
 
     do index1 = 1, num_of_simulations
         do index2 = 1, tracking_bin_width
@@ -175,8 +175,9 @@ program main
 
     end do 
 
-    close(1); close(2); close(3)
-    close(4); close(10)
+    ! close(1); close(2); close(3)
+    ! close(4)
+    close(10)
 
     call system_clock(ended_time)
 

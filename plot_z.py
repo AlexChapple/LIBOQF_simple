@@ -11,7 +11,7 @@ import matplotlib
 import cmath as cm 
 matplotlib.rcParams.update({'font.size': 24})
 
-directory = "results/"
+directory = "results2/"
 Omega_list = [2.3, 1.0, 0.7]
 
 
@@ -22,7 +22,7 @@ for Omega in Omega_list:
 
     name = directory + "sigma_z_" + (str(Omega).replace(".", "")) + ".txt"
 
-    z_list.append(np.loadtxt(name))
+    z_list.append(np.loadtxt(name)[0:13000])
 
 time_list = z_list[0][:,0]
 
@@ -70,14 +70,14 @@ colour_list = [colours.greek_dark_red, colours.orange_peel, colours.new_green]
 
 for index in range(len(Omega_list)):
 
-    plt.plot(time_list, z_list[index][:,1], lw=5, c=colour_list[index], label=("$\Omega$ = " + str(Omega_list[index])))
+    plt.plot(time_list, z_list[index][:,1], lw=5, c=colour_list[index], label=("$\Omega / \gamma$ = " + str(Omega_list[index])))
 
     if index == 2:
         plt.plot(time_list, z_list_analytical[index], lw=5, c=colours.greek_dark_blue, ls="dotted", label="analytical")
     else:
         plt.plot(time_list, z_list_analytical[index], lw=5, c=colours.greek_dark_blue, ls="dotted")
 
-plt.xlabel("Time $\gamma t$ (seconds)")
+plt.xlabel("$\gamma t$")
 plt.ylabel("$\langle \sigma_z (t) \\rangle$")
 plt.grid()
 plt.legend(loc="lower right")

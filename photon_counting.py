@@ -12,10 +12,11 @@ import matplotlib
 import cmath as cm 
 matplotlib.rcParams.update({'font.size': 24})
 
-directory = "results/"
-photon_data = np.loadtxt("photon_counting.txt")
-photon_bin_cut_off = 20 
+directory = "results2/"
+photon_data = np.loadtxt(directory + "photon_counting_23.txt")
+photon_bin_cut_off = 22
 num_of_simulations = 100000
+plot_Poisson = True
 
 
 # Plot photon counting 
@@ -36,17 +37,11 @@ ax.yaxis.label.set_color(colours.spanish_gray)
 x_list = range(np.size(photon_data))
 photon_data_norm = [i / num_of_simulations for i in photon_data]
 
-
-plt.bar(x_list[0:photon_bin_cut_off], photon_data_norm[0:photon_bin_cut_off], color=colours.greek_blue)
-plt.xlabel("Photon number")
-plt.ylabel("Probability")
-plt.savefig(directory + "photon_counting.pdf", facecolor=fig.get_facecolor(), transparent=True, dpi=600)
-
 # Do statistics here 
 nbar = 0 
 for i in range(len(x_list)):
 
-    nbar += x_list[i] * photon_data_norm[i]
+    nbar += (x_list[i] * photon_data_norm[i])
 
 variance = 0 
 for i in range(len(x_list)):
@@ -55,7 +50,7 @@ for i in range(len(x_list)):
 
 Mandel_Q = (variance - nbar)/ nbar 
 
-print("$\\overbar{n}$ = ", nbar)
+print("nbar = ", nbar)
 print("Q = ", Mandel_Q)
 
 # Add a poisson distribution curve onto the plot 
@@ -65,5 +60,36 @@ for k in x_list:
     p = (nbar ** k) * np.exp(-nbar) / np.math.factorial(k)
     poisson_list.append(p)
 
-plt.plot(x_list[0:photon_bin_cut_off], poisson_list[0:photon_bin_cut_off])
-plt.savefig(directory + "photon_counting_poisson.pdf", facecolor=fig.get_facecolor(), transparent=True, dpi=600)
+if plot_Poisson:
+
+    def poisson_distribution(mean, n):
+
+        return ((mean**n) * np.exp(-mean) / np.math.factorial(n))
+
+    poisson_list2 = [poisson_distribution(nbar, n) for n in range(0,photon_bin_cut_off)]
+    
+
+    plt.bar(x_list[0:photon_bin_cut_off], poisson_list2[0:photon_bin_cut_off], label="Poissonian", color=colours.greek_red)
+
+    label = "Photon counting distribution\n(Sub-Poissonian)"
+    plt.bar(x_list[0:photon_bin_cut_off], photon_data_norm[0:photon_bin_cut_off], label=label, color=colours.greek_blue)
+    
+
+else:
+    plt.bar(x_list[0:photon_bin_cut_off], photon_data_norm[0:photon_bin_cut_off], color=colours.greek_blue)
+
+plt.legend()
+plt.xlabel("Photon number")
+plt.ylabel("Probability")
+plt.savefig(directory + "photon_counting.pdf", facecolor=fig.get_facecolor(), transparent=True, dpi=600)
+
+
+
+
+
+
+
+# Plots a poisson distribution in the back with same mean 
+
+# plt.savefig(directory + "photon_counting_poisson.pdf", facecolor=fig.get_facecolor(), transparent=True, dpi=600)
+
